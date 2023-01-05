@@ -27,7 +27,7 @@ body {
 .slide-wrapper {
   position: relative;
   overflow: hidden;
-  width: 440px;
+  width: 400px;
   height: 250px;
   border-radius: 10px;
 }
@@ -35,7 +35,7 @@ body {
 .slide {
   position: absolute;
   display: flex;
-  left: -440px;
+  left: -400px;
 }
 
 .slide.transition {
@@ -43,7 +43,6 @@ body {
 }
 
 .item-slide {
-  padding: 0 20px;
   width: 400px;
   height: 250px;
   cursor: pointer;
@@ -52,7 +51,6 @@ body {
 img {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
 }
 
 .icon {
@@ -60,6 +58,7 @@ img {
   top: 50%;
   z-index: 1;
   transform: translateY(-50%);
+  transform: translateX(-150%);
   cursor: pointer;
   font-size: 20px;
 }
@@ -69,6 +68,7 @@ img {
 }
 .next {
   right: 0;
+  transform: translateX(150%);
 }
 
 .icon i {

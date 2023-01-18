@@ -82,3 +82,32 @@ img {
 .icon i:active {
   color: red;
 }
+
+/* dot item */
+.dots {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  column-gap: 20px;
+  padding-top: 10px;
+}
+.dot-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #60a5fa;
+}
+.dot-item:hover {
+  background-color: #3b82f6;
+}
+.dot-item:active {
+  background-color: #1e3a8a;
+}
+.dot-item.active-item{
+  background-color: #1e3a8a;
+}
+.dot-item.transdot{
+  transition: all 0.1s linear;
+}

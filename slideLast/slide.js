@@ -12,6 +12,26 @@ const lastSlide = itemSlide[itemSlide.length - 1].cloneNode(true);
 let slideLength = itemSlide.length;
 slide.appendChild(firstSlide);
 slide.insertBefore(lastSlide, itemSlide[0]);
+const dots = document.querySelector(".dots");
+for (var i = 1; i <= slideLength; i++) {
+  dots.innerHTML += '<div class="dot-item" data-indexdot = ' + i + "></div>";
+}
+
+const dotItem = document.querySelectorAll(".dot-item");
+dotItem[0].classList.add("active-item");
+[...dotItem].forEach((g) => g.classList.add("transdot"));
+
+[...dotItem].forEach(function (item) {
+  item.addEventListener("click", function (c) {
+    [...dotItem].forEach((g) => g.classList.remove("active-item"));
+    c.target.classList.add("active-item");
+    const dotIndex = parseInt(c.target.dataset.indexdot);
+    index = dotIndex;
+    console.log("🚀 ~ file: slide.js:29 ~ index", index);
+    slide.classList.add("transition");
+    slide.style.left = `-${index * slideWidth}px`;
+  });
+});
 
 let initialPosition;
 let finalPosition;
@@ -19,9 +39,27 @@ let canISlide = true;
 let posX1;
 let posX2;
 
+slide.addEventListener("mousedown", dragStart);
+slide.addEventListener("touchstart", dragStart);
+slide.addEventListener("touchend", dragEnd);
+slide.addEventListener("touchmove", dragMove);
+
+btnNext.addEventListener("click", function () {
+  switchSlide("next");
+});
+btnPrev.addEventListener("click", function () {
+  switchSlide("prev");
+});
+slide.addEventListener("transitionend", checkIndex);
+
 function dragMove(e) {
-  posX2 = posX1 - e.clientX;
-  posX1 = e.clientX;
+  if (e.type == "touchmove") {
+    posX2 = posX1 - e.touches[0].clientX;
+    posX1 = e.touches[0].clientX;
+  } else {
+    posX2 = posX1 - e.clientX;
+    posX1 = e.clientX;
+  }
   slide.style.left = `${slide.offsetLeft - posX2}px`;
 }
 
@@ -42,29 +80,14 @@ function dragStart(e) {
   if (canISlide) {
     e.preventDefault();
     initialPosition = slide.offsetLeft;
-    posX1 = e.clientX;
-    document.onmouseup = dragEnd;
-    document.onmousemove = dragMove;
-  }
-}
-
-slide.addEventListener("mousedown", dragStart);
-
-function switchSlide(arg, arg2) {
-  slide.classList.add("transition");
-  if (!arg2) {
-    initialPosition = slide.offsetLeft;
-  }
-  if (canISlide) {
-    if (arg === "next") {
-      index++;
-      slide.style.left = `${initialPosition - slideWidth}px`;
+    if (e.type == "touchstart") {
+      posX1 = e.touches[0].clientX;
     } else {
-      index--;
-      slide.style.left = `${initialPosition + slideWidth}px`;
+      posX1 = e.clientX;
+      document.onmouseup = dragEnd;
+      document.onmousemove = dragMove;
     }
   }
-  canISlide = false;
 }
 
 function checkIndex() {
@@ -72,20 +95,37 @@ function checkIndex() {
 
   if (index === 0) {
     slide.style.left = `-${slideLength * slideWidth}px`;
+    dotItem[3].classList.add("active-item");
     index = 4;
   }
 
   if (index === slideLength + 1) {
     slide.style.left = `-${slideWidth}px`;
+    dotItem[0].classList.add("active-item");
     index = 1;
   }
   canISlide = true;
 }
 
-btnNext.addEventListener("click", function () {
-  switchSlide("next");
-});
-btnPrev.addEventListener("click", function () {
-  switchSlide("prev");
-});
-slide.addEventListener("transitionend", checkIndex);
+function switchSlide(arg, arg2) {
+  slide.classList.add("transition");
+  [...dotItem].forEach((g) => g.classList.remove("active-item"));
+  if (!arg2) {
+    initialPosition = slide.offsetLeft;
+  }
+  if (canISlide) {
+    slide.style.left = `${initialPosition - slideWidth}px`;
+    if (arg === "next") {
+      index++;
+      console.log("🚀 ~ file: slide.js:122 ~ switchSlide ~ index", index);
+    } else {
+      index--;
+      console.log("🚀 ~ file: slide.js:126 ~ switchSlide ~ index", index);
+      slide.style.left = `${initialPosition + slideWidth}px`;
+    }
+    if ((index < 5) & (index > 0)) {
+      dotItem[index - 1].classList.add("active-item");
+    }
+  }
+  canISlide = false;
+}
